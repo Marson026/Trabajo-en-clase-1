@@ -84,6 +84,14 @@
             color: white;
             font-size: 48px;
             position: relative;
+            overflow: hidden;
+        }
+        .song-cover img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .remove-favorite {
             position: absolute;
@@ -263,6 +271,9 @@
                     <div class="song-card">
                         <div class="song-cover">
                             <i class="bi bi-music-note-beamed"></i>
+                            <img src="<%= request.getContextPath() %>/images/<%= cancion.getPortada() %>"
+                                 alt="Portada de <%= cancion.getTitulo() %>"
+                                 onerror="this.style.display='none'">
                             <div class="remove-favorite">
                                 <form method="POST" action="<%= request.getContextPath() %>/cancion" style="width:100%; height:100%;">
                                     <input type="hidden" name="accion" value="desfavorita">
