@@ -1,4 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="hnuth.trabajo.model.Usuario" %>
+<%@ page import="hnuth.trabajo.service.DataService" %>
+<%
+    request.setCharacterEncoding("UTF-8");
+    String error = null;
+    String email = "";
+
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        email = request.getParameter("email") == null ? "" : request.getParameter("email").trim();
+        String contrasena = request.getParameter("contrasena");
+
+        if (email.isEmpty() || contrasena == null || contrasena.trim().isEmpty()) {
+            error = "Por favor completa todos los campos.";
+        } else {
+            Usuario usuario = DataService.getInstance().autenticar(email, contrasena);
+            if (usuario != null) {
+                session.setAttribute("usuarioId", usuario.getId());
+                session.setAttribute("usuarioNombre", usuario.getNombre());
+                session.setAttribute("usuarioEmail", usuario.getEmail());
+                session.setMaxInactiveInterval(30 * 60);
+                response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
+                return;
+            }
+            error = "Email o contraseña incorrectos.";
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -108,18 +135,20 @@
             <p>Tu colección musical en línea</p>
         </div>
 
-        <% if (request.getAttribute("error") != null) { %>
+        <% if (error != null) { %>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-circle"></i>
-                <%= request.getAttribute("error") %>
+                <%= error %>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <% } %>
 
-        <form method="POST" action="<%= request.getContextPath() %>/login" class="needs-validation">
+        <form method="POST" action="<%= request.getContextPath() %>/login.jsp" class="needs-validation">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="tu@email.com" required>
+                <input type="email" class="form-control" id="email" name="email"
+                       value="<%= email.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;") %>"
+                       placeholder="tu@email.com" required>
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">Contraseña</label>

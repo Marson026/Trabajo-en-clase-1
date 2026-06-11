@@ -2,6 +2,8 @@
 <%@ page import="hnuth.trabajo.service.DataService" %>
 <%@ page import="hnuth.trabajo.model.Cancion" %>
 <%
+    request.setCharacterEncoding("UTF-8");
+
     if (session.getAttribute("usuarioId") == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
@@ -18,10 +20,34 @@
 
     DataService dataService = DataService.getInstance();
     Cancion cancion = dataService.obtenerCancionPorId(idCancion);
+    String error = null;
 
     if (cancion == null) {
         response.sendRedirect(request.getContextPath() + "/canciones.jsp");
         return;
+    }
+
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        String titulo = request.getParameter("titulo") == null ? "" : request.getParameter("titulo").trim();
+        String artista = request.getParameter("artista") == null ? "" : request.getParameter("artista").trim();
+        String genero = request.getParameter("genero") == null ? "" : request.getParameter("genero").trim();
+        String duracion = request.getParameter("duracion") == null ? "" : request.getParameter("duracion").trim();
+        String album = request.getParameter("album") == null ? "" : request.getParameter("album").trim();
+        String portada = request.getParameter("portada") == null ? "" : request.getParameter("portada").trim();
+
+        if (titulo.isEmpty() || artista.isEmpty() || genero.isEmpty()
+                || duracion.isEmpty() || album.isEmpty() || portada.isEmpty()) {
+            error = "Todos los campos son obligatorios.";
+        } else if (!duracion.matches("\\d{1,3}:[0-5]\\d")) {
+            error = "La duración debe tener el formato MM:SS.";
+        } else {
+            Cancion cancionActualizada = new Cancion(
+                    idCancion, titulo, artista, genero, duracion, album, portada
+            );
+            dataService.actualizarCancion(cancionActualizada);
+            response.sendRedirect(request.getContextPath() + "/canciones.jsp");
+            return;
+        }
     }
 %>
 <!DOCTYPE html>
@@ -182,7 +208,7 @@
                         <span class="nav-link">Hola, <%= usuarioNombre %></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<%= request.getContextPath() %>/logout">
+                        <a class="nav-link" href="<%= request.getContextPath() %>/logout.jsp">
                             <i class="bi bi-box-arrow-right"></i> Cerrar
                         </a>
                     </li>
@@ -196,10 +222,10 @@
             <h1><i class="bi bi-pencil-square" style="color: #3498db;"></i> Editar Canción</h1>
             <p>Modifica los detalles de la canción</p>
 
-            <% if (request.getAttribute("error") != null) { %>
+            <% if (error != null) { %>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-exclamation-circle"></i>
-                    <%= request.getAttribute("error") %>
+                    <%= error %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <% } %>
@@ -209,8 +235,7 @@
                 <strong><%= cancion.getTitulo() %></strong> por <strong><%= cancion.getArtista() %></strong>
             </div>
 
-            <form method="POST" action="<%= request.getContextPath() %>/cancion">
-                <input type="hidden" name="accion" value="editar">
+            <form method="POST" action="<%= request.getContextPath() %>/editar-cancion.jsp">
                 <input type="hidden" name="id" value="<%= cancion.getId() %>">
 
                 <div class="form-group">

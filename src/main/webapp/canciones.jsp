@@ -3,6 +3,8 @@
 <%@ page import="hnuth.trabajo.model.Cancion" %>
 <%@ page import="java.util.List" %>
 <%
+    request.setCharacterEncoding("UTF-8");
+
     if (session.getAttribute("usuarioId") == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
@@ -11,6 +13,28 @@
     String usuarioNombre = (String) session.getAttribute("usuarioNombre");
 
     DataService dataService = DataService.getInstance();
+
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        String accion = request.getParameter("accion");
+        try {
+            if ("eliminar".equals(accion)) {
+                dataService.eliminarCancion(Integer.parseInt(request.getParameter("id")));
+            } else if ("favorita".equals(accion)) {
+                dataService.agregarFavorita(
+                        usuarioId, Integer.parseInt(request.getParameter("idCancion"))
+                );
+            } else if ("desfavorita".equals(accion)) {
+                dataService.quitarFavorita(
+                        usuarioId, Integer.parseInt(request.getParameter("idCancion"))
+                );
+            }
+        } catch (NumberFormatException ignored) {
+            // Si el identificador no es válido, se vuelve a mostrar la lista.
+        }
+        response.sendRedirect(request.getContextPath() + "/canciones.jsp");
+        return;
+    }
+
     List<Cancion> canciones = dataService.obtenerTodasLasCanciones();
 %>
 <!DOCTYPE html>
@@ -254,7 +278,7 @@
                         <span class="nav-link">Hola, <%= usuarioNombre %></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<%= request.getContextPath() %>/logout">
+                        <a class="nav-link" href="<%= request.getContextPath() %>/logout.jsp">
                             <i class="bi bi-box-arrow-right"></i> Cerrar
                         </a>
                     </li>
@@ -310,7 +334,7 @@
                                  alt="Portada de <%= cancion.getTitulo() %>"
                                  onerror="this.style.display='none'">
                             <div class="favorite-badge <%= isFavorite ? "active" : "" %>">
-                                <form method="POST" action="<%= request.getContextPath() %>/cancion" style="width:100%; height:100%;">
+                                <form method="POST" action="<%= request.getContextPath() %>/canciones.jsp" style="width:100%; height:100%;">
                                     <input type="hidden" name="accion" value="<%= isFavorite ? "desfavorita" : "favorita" %>">
                                     <input type="hidden" name="idCancion" value="<%= cancion.getId() %>">
                                     <button type="submit" style="width:100%; height:100%; border:none; background:none; cursor:pointer;">
@@ -331,7 +355,7 @@
                                 <a href="<%= request.getContextPath() %>/editar-cancion.jsp?id=<%= cancion.getId() %>" class="btn btn-sm btn-edit">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>
-                                <form method="POST" action="<%= request.getContextPath() %>/cancion" style="flex: 1;">
+                                <form method="POST" action="<%= request.getContextPath() %>/canciones.jsp" style="flex: 1;">
                                     <input type="hidden" name="accion" value="eliminar">
                                     <input type="hidden" name="id" value="<%= cancion.getId() %>">
                                     <button type="submit" class="btn btn-sm btn-delete w-100" onclick="return confirm('¿Eliminar esta canción?')">

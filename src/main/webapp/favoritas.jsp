@@ -3,6 +3,8 @@
 <%@ page import="hnuth.trabajo.model.Cancion" %>
 <%@ page import="java.util.List" %>
 <%
+    request.setCharacterEncoding("UTF-8");
+
     if (session.getAttribute("usuarioId") == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
@@ -11,6 +13,18 @@
     String usuarioNombre = (String) session.getAttribute("usuarioNombre");
 
     DataService dataService = DataService.getInstance();
+
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        try {
+            int idCancion = Integer.parseInt(request.getParameter("idCancion"));
+            dataService.quitarFavorita(usuarioId, idCancion);
+        } catch (NumberFormatException ignored) {
+            // Si el identificador no es válido, se vuelve a mostrar la lista.
+        }
+        response.sendRedirect(request.getContextPath() + "/favoritas.jsp");
+        return;
+    }
+
     List<Cancion> cancionesFavoritas = dataService.obtenerCancionesFavoritasUsuario(usuarioId);
 %>
 <!DOCTYPE html>
@@ -236,7 +250,7 @@
                         <span class="nav-link">Hola, <%= usuarioNombre %></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<%= request.getContextPath() %>/logout">
+                        <a class="nav-link" href="<%= request.getContextPath() %>/logout.jsp">
                             <i class="bi bi-box-arrow-right"></i> Cerrar
                         </a>
                     </li>
@@ -275,8 +289,7 @@
                                  alt="Portada de <%= cancion.getTitulo() %>"
                                  onerror="this.style.display='none'">
                             <div class="remove-favorite">
-                                <form method="POST" action="<%= request.getContextPath() %>/cancion" style="width:100%; height:100%;">
-                                    <input type="hidden" name="accion" value="desfavorita">
+                                <form method="POST" action="<%= request.getContextPath() %>/favoritas.jsp" style="width:100%; height:100%;">
                                     <input type="hidden" name="idCancion" value="<%= cancion.getId() %>">
                                     <button type="submit" title="Quitar de favoritas">
                                         <i class="bi bi-heart-fill"></i>

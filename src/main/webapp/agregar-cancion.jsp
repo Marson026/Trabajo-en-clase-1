@@ -1,10 +1,57 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="hnuth.trabajo.model.Cancion" %>
+<%@ page import="hnuth.trabajo.service.DataService" %>
+<%!
+    private String escaparHtml(String valor) {
+        if (valor == null) {
+            return "";
+        }
+        return valor.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+%>
 <%
+    request.setCharacterEncoding("UTF-8");
+
     if (session.getAttribute("usuarioId") == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
+
     String usuarioNombre = (String) session.getAttribute("usuarioNombre");
+    String error = null;
+    String titulo = "";
+    String artista = "";
+    String genero = "";
+    String duracion = "";
+    String album = "";
+    String portada = "";
+
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        titulo = request.getParameter("titulo") == null ? "" : request.getParameter("titulo").trim();
+        artista = request.getParameter("artista") == null ? "" : request.getParameter("artista").trim();
+        genero = request.getParameter("genero") == null ? "" : request.getParameter("genero").trim();
+        duracion = request.getParameter("duracion") == null ? "" : request.getParameter("duracion").trim();
+        album = request.getParameter("album") == null ? "" : request.getParameter("album").trim();
+        portada = request.getParameter("portada") == null ? "" : request.getParameter("portada").trim();
+
+        if (titulo.isEmpty() || artista.isEmpty() || genero.isEmpty()
+                || duracion.isEmpty() || album.isEmpty() || portada.isEmpty()) {
+            error = "Todos los campos son obligatorios.";
+        } else if (!duracion.matches("\\d{1,3}:[0-5]\\d")) {
+            error = "La duración debe tener el formato MM:SS.";
+        } else {
+            Cancion nuevaCancion = new Cancion(
+                    0, titulo, artista, genero, duracion, album, portada
+            );
+            DataService.getInstance().agregarCancion(nuevaCancion);
+            response.sendRedirect(request.getContextPath() + "/canciones.jsp");
+            return;
+        }
+    }
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -165,7 +212,7 @@
                         <span class="nav-link">Hola, <%= usuarioNombre %></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<%= request.getContextPath() %>/logout">
+                        <a class="nav-link" href="<%= request.getContextPath() %>/logout.jsp">
                             <i class="bi bi-box-arrow-right"></i> Cerrar
                         </a>
                     </li>
@@ -179,10 +226,10 @@
             <h1><i class="bi bi-plus-circle" style="color: #26c281;"></i> Agregar Nueva Canción</h1>
             <p>Completa los detalles de la canción que deseas agregar</p>
 
-            <% if (request.getAttribute("error") != null) { %>
+            <% if (error != null) { %>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-exclamation-circle"></i>
-                    <%= request.getAttribute("error") %>
+                    <%= error %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <% } %>
@@ -192,12 +239,12 @@
                 <strong>Nota:</strong> Agregar canciones
             </div>
 
-            <form method="POST" action="<%= request.getContextPath() %>/cancion">
-                <input type="hidden" name="accion" value="agregar">
+            <form method="POST" action="<%= request.getContextPath() %>/agregar-cancion.jsp">
 
                 <div class="form-group">
                     <label for="titulo" class="form-label required">Título</label>
                     <input type="text" class="form-control" id="titulo" name="titulo" required
+                           maxlength="100" value="<%= escaparHtml(titulo) %>"
                            placeholder="Ej: Bohemian Rhapsody">
                 </div>
 
@@ -205,21 +252,22 @@
                     <div class="form-group">
                         <label for="artista" class="form-label required">Artista</label>
                         <input type="text" class="form-control" id="artista" name="artista" required
+                               maxlength="100" value="<%= escaparHtml(artista) %>"
                                placeholder="Ej: Queen">
                     </div>
                     <div class="form-group">
                         <label for="genero" class="form-label required">Género</label>
                         <select class="form-control" id="genero" name="genero" required>
                             <option value="">Selecciona un género</option>
-                            <option value="Rock">Rock</option>
-                            <option value="Pop">Pop</option>
-                            <option value="Hip-Hop">Hip-Hop</option>
-                            <option value="Jazz">Jazz</option>
-                            <option value="Clásica">Clásica</option>
-                            <option value="Electrónica">Electrónica</option>
-                            <option value="Reggae">Reggae</option>
-                            <option value="Blues">Blues</option>
-                            <option value="Otro">Otro</option>
+                            <option value="Rock" <%= "Rock".equals(genero) ? "selected" : "" %>>Rock</option>
+                            <option value="Pop" <%= "Pop".equals(genero) ? "selected" : "" %>>Pop</option>
+                            <option value="Hip-Hop" <%= "Hip-Hop".equals(genero) ? "selected" : "" %>>Hip-Hop</option>
+                            <option value="Jazz" <%= "Jazz".equals(genero) ? "selected" : "" %>>Jazz</option>
+                            <option value="Clásica" <%= "Clásica".equals(genero) ? "selected" : "" %>>Clásica</option>
+                            <option value="Electrónica" <%= "Electrónica".equals(genero) ? "selected" : "" %>>Electrónica</option>
+                            <option value="Reggae" <%= "Reggae".equals(genero) ? "selected" : "" %>>Reggae</option>
+                            <option value="Blues" <%= "Blues".equals(genero) ? "selected" : "" %>>Blues</option>
+                            <option value="Otro" <%= "Otro".equals(genero) ? "selected" : "" %>>Otro</option>
                         </select>
                     </div>
                 </div>
@@ -228,12 +276,15 @@
                     <div class="form-group">
                         <label for="duracion" class="form-label required">Duración</label>
                         <input type="text" class="form-control" id="duracion" name="duracion" required
+                               pattern="[0-9]{1,3}:[0-5][0-9]" maxlength="6"
+                               value="<%= escaparHtml(duracion) %>"
                                placeholder="Ej: 5:55">
                         <div class="help-text">Formato: MM:SS</div>
                     </div>
                     <div class="form-group">
                         <label for="album" class="form-label required">Álbum</label>
                         <input type="text" class="form-control" id="album" name="album" required
+                               maxlength="100" value="<%= escaparHtml(album) %>"
                                placeholder="Ej: A Night at the Opera">
                     </div>
                 </div>
@@ -241,6 +292,7 @@
                 <div class="form-group">
                     <label for="portada" class="form-label required">Portada (Nombre del Archivo)</label>
                     <input type="text" class="form-control" id="portada" name="portada" required
+                           maxlength="255" value="<%= escaparHtml(portada) %>"
                            placeholder="Ej: queen.jpg">
                     <div class="help-text">Solo escribe el nombre del archivo de imagen</div>
                 </div>
