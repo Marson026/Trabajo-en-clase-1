@@ -189,7 +189,7 @@
 
             <div class="form-info">
                 <i class="bi bi-info-circle"></i>
-                <strong>Nota:</strong> Para la portada, usa nombres como: queen.jpg, eagles.jpg, ledzeppelin.jpg, johnlennon.jpg, beatles.jpg, gnr.jpg, pinkfloyd.jpg, leonardcohen.jpg
+                <strong>Nota:</strong> Agregar canciones
             </div>
 
             <form method="POST" action="<%= request.getContextPath() %>/cancion">

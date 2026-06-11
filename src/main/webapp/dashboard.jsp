@@ -235,18 +235,33 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
                     <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
                         <p style="margin: 0; color: #999; font-size: 12px;">Integrante 1</p>
-                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre:</p>
-                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta:</p>
+                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre: Zurisaday Alvarenga Almendarez</p>
+                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta: 202220020115</p>
                     </div>
                     <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #764ba2;">
                         <p style="margin: 0; color: #999; font-size: 12px;">Integrante 2</p>
-                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre:</p>
-                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta:</p>
+                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre: Cristhian Illa</p>
+                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta: 202210020278</p>
                     </div>
                     <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #f95959;">
                         <p style="margin: 0; color: #999; font-size: 12px;">Integrante 3</p>
-                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre:</p>
-                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta:</p>
+                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre: Brayan Edgardo Aguilar Aguilera</p>
+                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta: 202320110146</p>
+                    </div>
+                    <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin: 0; color: #999; font-size: 12px;">Integrante 4</p>
+                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre: Emerson Ricardo Jimenez</p>
+                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta: 202310080212</p>
+                    </div>
+                    <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin: 0; color: #999; font-size: 12px;">Integrante 5</p>
+                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre: Luis Alberto Colindres Ventura</p>
+                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta: 201930060108 </p>
+                    </div>
+                    <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin: 0; color: #999; font-size: 12px;">Integrante 6</p>
+                        <p style="margin: 5px 0 0 0; color: #333; font-weight: bold; font-size: 16px;">Nombre: Marlon Jared Saenz Blanco</p>
+                        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Número de Cuenta: 202230010131</p>
                     </div>
                 </div>
             </div>
