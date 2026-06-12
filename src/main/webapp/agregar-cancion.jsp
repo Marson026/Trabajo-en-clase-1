@@ -21,6 +21,7 @@
         return;
     }
 
+    int usuarioId = (Integer) session.getAttribute("usuarioId");
     String usuarioNombre = (String) session.getAttribute("usuarioNombre");
     String error = null;
     String titulo = "";
@@ -47,7 +48,7 @@
             Cancion nuevaCancion = new Cancion(
                     0, titulo, artista, genero, duracion, album, portada
             );
-            DataService.getInstance().agregarCancion(nuevaCancion);
+            DataService.getInstance().agregarCancion(usuarioId, nuevaCancion);
             response.sendRedirect(request.getContextPath() + "/canciones.jsp");
             return;
         }

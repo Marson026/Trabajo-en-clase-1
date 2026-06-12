@@ -1,7 +1,9 @@
 package hnuth.trabajo.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Usuario implements Serializable {
@@ -10,6 +12,7 @@ public class Usuario implements Serializable {
     private String nombre;
     private String email;
     private String contrasena;
+    private List<Cancion> canciones;
     private Set<Integer> cancionesFavoritas;
 
     public Usuario(int id, String nombre, String email, String contrasena) {
@@ -17,6 +20,7 @@ public class Usuario implements Serializable {
         this.nombre = nombre;
         this.email = email;
         this.contrasena = contrasena;
+        this.canciones = new ArrayList<>();
         this.cancionesFavoritas = new HashSet<>();
     }
 
@@ -54,6 +58,17 @@ public class Usuario implements Serializable {
 
     public Set<Integer> getCancionesFavoritas() {
         return cancionesFavoritas;
+    }
+
+    public List<Cancion> getCanciones() {
+        return canciones;
+    }
+
+    public void inicializarCanciones(List<Cancion> cancionesIniciales) {
+        this.canciones = new ArrayList<>();
+        for (Cancion cancion : cancionesIniciales) {
+            this.canciones.add(new Cancion(cancion));
+        }
     }
 
     public void agregarFavorita(int idCancion) {

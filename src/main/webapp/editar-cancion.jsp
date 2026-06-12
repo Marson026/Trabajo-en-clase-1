@@ -8,6 +8,7 @@
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
+    int usuarioId = (Integer) session.getAttribute("usuarioId");
     String usuarioNombre = (String) session.getAttribute("usuarioNombre");
 
     int idCancion = 0;
@@ -19,7 +20,7 @@
     }
 
     DataService dataService = DataService.getInstance();
-    Cancion cancion = dataService.obtenerCancionPorId(idCancion);
+    Cancion cancion = dataService.obtenerCancionPorId(usuarioId, idCancion);
     String error = null;
 
     if (cancion == null) {
@@ -44,7 +45,7 @@
             Cancion cancionActualizada = new Cancion(
                     idCancion, titulo, artista, genero, duracion, album, portada
             );
-            dataService.actualizarCancion(cancionActualizada);
+            dataService.actualizarCancion(usuarioId, cancionActualizada);
             response.sendRedirect(request.getContextPath() + "/canciones.jsp");
             return;
         }

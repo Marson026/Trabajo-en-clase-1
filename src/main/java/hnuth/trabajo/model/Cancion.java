@@ -22,6 +22,10 @@ public class Cancion implements Serializable {
         this.portada = portada;
     }
 
+    public Cancion(Cancion otra) {
+        this(otra.id, otra.titulo, otra.artista, otra.genero, otra.duracion, otra.album, otra.portada);
+    }
+
     public int getId() {
         return id;
     }

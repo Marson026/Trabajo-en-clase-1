@@ -18,7 +18,7 @@
         String accion = request.getParameter("accion");
         try {
             if ("eliminar".equals(accion)) {
-                dataService.eliminarCancion(Integer.parseInt(request.getParameter("id")));
+                dataService.eliminarCancion(usuarioId, Integer.parseInt(request.getParameter("id")));
             } else if ("favorita".equals(accion)) {
                 dataService.agregarFavorita(
                         usuarioId, Integer.parseInt(request.getParameter("idCancion"))
@@ -35,7 +35,7 @@
         return;
     }
 
-    List<Cancion> canciones = dataService.obtenerTodasLasCanciones();
+    List<Cancion> canciones = dataService.obtenerTodasLasCanciones(usuarioId);
 %>
 <!DOCTYPE html>
 <html lang="es">
